@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!-- saved from url=(0023)http://www.clipsol.com/ -->
+<html class="no-js seed-csp4" lang="en" style=""><script>(function main() {
+    // Create enabled event
+    function fireEnabledEvent() {
+        // If gli exists, then we are already present and shouldn't do anything
+        if (!window.gli) {
+            setTimeout(function () {
+                var enabledEvent = document.createEvent("Event");
+                enabledEvent.initEvent("WebGLEnabledEvent", true, true);
+                document.dispatchEvent(enabledEvent);
+            }, 0);
+        } else {
+            //console.log("WebGL Inspector already embedded on the page - disabling extension");
+        }
+    };
+
+    // Grab the path root from the extension
+    document.addEventListener("WebGLInspectorReadyEvent", function (e) {
+        var pathElement = document.getElementById("__webglpathroot");
+        if (window["gliloader"]) {
+            gliloader.pathRoot = pathElement.innerText;
+        } else {
+            // TODO: more?
+            window.gliCssUrl = pathElement.innerText + "gli.all.css";
+        }
+    }, false);
+
+    // Rewrite getContext to snoop for webgl
+    var originalGetContext = HTMLCanvasElement.prototype.getContext;
+    if (!HTMLCanvasElement.prototype.getContextRaw) {
+        HTMLCanvasElement.prototype.getContextRaw = originalGetContext;
+    }
+    HTMLCanvasElement.prototype.getContext = function () {
+        var ignoreCanvas = this.internalInspectorSurface;
+        if (ignoreCanvas) {
+            return originalGetContext.apply(this, arguments);
+        }
+
+        var result = originalGetContext.apply(this, arguments);
+        if (result == null) {
+            return null;
+        }
+
+        var contextNames = ["moz-webgl", "webkit-3d", "experimental-webgl", "webgl", "3d"];
+        var requestingWebGL = contextNames.indexOf(arguments[0]) != -1;
+        if (requestingWebGL) {
+            // Page is requesting a WebGL context!
+            fireEnabledEvent(this);
+
+            // If we are injected, inspect this context
+            if (window.gli) {
+                if (gli.host.inspectContext) {
+                    // TODO: pull options from extension
+                    result = gli.host.inspectContext(this, result);
+                    // NOTE: execute in a timeout so that if the dom is not yet
+                    // loaded this won't error out.
+                    window.setTimeout(function() {
+                        var hostUI = new gli.host.HostUI(result);
+                        result.hostUI = hostUI; // just so we can access it later for debugging
+                    }, 0);
+                }
+            }
+        }
+
+        return result;
+    };
+})();</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<title></title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		
+		<!-- Bootstrap and default Style -->
+<link rel="stylesheet" href="./files/bootstrap.min.css">
+<link rel="stylesheet" href="./files/style.css">
+<style type="text/css">
+/* calculated styles */
+
+	/* Background Style */
+    html{
+		        	background: #ffffff;
+		    }
+    .seed-csp4 body{
+							background: transparent;
+				}
+	
+	
+	
+    /* Text Styles */
+    	    .seed-csp4 body{
+	        font-family: Helvetica, Arial, sans-serif	    }
+
+	    .seed-csp4 h1, .seed-csp4 h2, .seed-csp4 h3, .seed-csp4 h4, .seed-csp4 h5, .seed-csp4 h6{
+	        font-family: Helvetica, Arial, sans-serif	    }
+    
+    		.seed-csp4 body{
+			color:#666666;
+		}
+    
+            
+
+    		.seed-csp4 h1, .seed-csp4 h2, .seed-csp4 h3, .seed-csp4 h4, .seed-csp4 h5, .seed-csp4 h6{
+			color:#444444;
+		}
+    
+
+    		.seed-csp4 a, .seed-csp4 a:visited, .seed-csp4 a:hover, .seed-csp4 a:active{
+			color:#d13030;
+		}
+
+
+    </style>
+<!-- JS -->
+<script src="./files/jquery.js.téléchargement"></script>
+<script src="./files/bootstrap.js.téléchargement"></script>
+<script src="./files/script.js.téléchargement"></script>
+<!-- Modernizr -->
+<script src="./files/modernizr.min.js.téléchargement"></script>
+
+		
+	</head>
+<body>
+<div id="seed-csp4-page">
+		<div id="seed-csp4-content">
+			<img id="seed-csp4-image" src="./files/logo-clipsol-300x300.png">
+			<h1 id="seed-csp4-headline">Le site de la société Clipsol n'est plus actif</h1>
+			<div id="seed-csp4-description"><p align="center">Pour toute demande merci de contacter la société Alboma&nbsp;:</p>
+<p align="center">Demande d’informations</p>
+<p align="center"><a href="mailto:Marcel.bouvier@alboma.fr" target="_blank">marcel.bouvier@alboma.fr</a></p>
+<p align="center">0480 480 627</p>
+<p align="center">Demande d’assistance, de Service après-vente ou de Garantie</p>
+<p align="center"><a href="mailto:william.jean@alboma.frboma.fr" target="_blank">william.jean@alboma.fr</a><br>
+0480 480&nbsp;626</p>
+<p style="text-align: center;">Le site de commande de pièces détachée pour les produits CLIPSOL est toujours disponible&nbsp;:&nbsp;<a href="http://www.sav.clipsol.com/">www.sav.clipsol.com</a></p>
+</div>
+		</div><!-- / #seed-csp4-content -->
+
+
+
+</div>
+
+
+
+<!-- Coming Soon Page and Maintenance Mode by SeedProd. Learn more: http://www.seedprod.com -->
+<div id="supersized-loader"></div><ul id="supersized"></ul></body></html>
